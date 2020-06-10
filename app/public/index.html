@@ -1,0 +1,63 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Patroleum</title>
+
+        <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
+        <script src="js/main.js"></script>
+    </head>
+    <body>
+        <div id="xsdk-video-call">
+            
+
+            <section class="vertical-bar">
+                <!-- CHAT -->
+                <span class="livechat">LIVE CHAT</span>
+                <section id="chatHistory" class="fb-col-item">
+                    <div id="messages">
+                        <!-- Display user messages history -->
+                    </div>
+                </section>
+
+                <!-- Sends user messages -->
+                <form id="sendMessage" class="message">
+                    <input type="text" id="message" autocomplete="off" placeholder="Enter chat text here" />
+                    <button id="submit-btn" type="submit"></button>
+                </form>
+
+            </section>
+            
+            <div id="right-pane">
+                <section class="major-box">
+                    <div id="co-logo" class="brand-logo"></div>
+                    <div class="new-alert">
+                        <div class="alert-frame"></div>
+                        <div class="alert-panel" id="alert-panel">
+                            <h1 id="heading">NEW ALERT</h1>
+                            <button id="accept-btn" type="button">Accept</button>
+                        </div>
+                    </div>
+                </section>
+                
+                <div id="co-footer" class="footer">© 2012-2020 Patroleum, Inc.</div>
+            </div>
+
+            
+            <!-- Login UI -->
+            <section class="cover">
+                <form id="login">
+                    <h1 id="heading">Please login to your account</h1>
+                    <input id="username" type="text" placeholder="Enter your email" />
+                    <input id="password" type="password" placeholder="Enter your password" />
+                    <button id="login-btn" type="submit">LOG IN</button>
+                </form>
+            </section>
+        </div>
+
+        
+    </body>
+</html>
+
