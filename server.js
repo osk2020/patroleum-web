@@ -68,8 +68,8 @@ io.on("connection", socket =>
         mysqlCon.query("select * from users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
         {
             if (err) throw err;
-
-            if (result)
+            console.log(Object.keys(result).length);
+            if (Object.keys(result).length > 0)
             {
                 console.log(result);
                 console.log(socket.id);
