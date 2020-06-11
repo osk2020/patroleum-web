@@ -1,15 +1,11 @@
-
-
 'use strict';
 
-var messagesEl, loginEl;
+var messagesEl, loginEl, usernameEl, passwordEl;
 window.onload = () => {
 
-    loginEl = document.getElementById('login');
-    messagesEl = document.getElementById('messages');
-
-    loginEl.onsubmit = function ($event) {
-        $event.preventDefault();
+    const socket = io.connect("localhost:1210");
+    socket.on("loggedin", async data =>
+    {
         loginEl.parentNode.style.visibility = 'hidden';
         
         var msgContainer = createMsgBox("Patroleum", "Logged In", "chat-msg msg-info");
@@ -23,6 +19,22 @@ window.onload = () => {
         msgContainer = createMsgBox("Agent", "OK Calling Now", "chat-msg msg-peer");
         messagesEl.appendChild(msgContainer);
         messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+
+    loginEl = document.getElementById('login');
+    messagesEl = document.getElementById('messages');
+    usernameEl = document.getElementById('username');
+    passwordEl = document.getElementById('password');
+
+    loginEl.onsubmit = function ($event) {
+        $event.preventDefault();
+        
+        var userEmail = usernameEl.value;
+        var password = passwordEl.value;
+        socket.emit("login", {
+            user: userEmail,
+            password: password
+        });
     };
 }
 
