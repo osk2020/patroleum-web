@@ -10,7 +10,7 @@ const   httpport = process.env.PORT || config.get('host').httpport || 1210,
         httpsport = process.env.SECURE_PORT || config.get('host').httpsport || 1280;
 
 var mysqlCon = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
     password: 'uos19851210',
     port: 3306
