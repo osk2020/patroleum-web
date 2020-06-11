@@ -33,14 +33,6 @@ window.onload = () => {
         var msgContainer = createMsgBox("Patroleum", "Logged In", "chat-msg msg-info");
         messagesEl.appendChild(msgContainer);
         messagesEl.scrollTop = messagesEl.scrollHeight;
-
-        msgContainer = createMsgBox("Daniel", "Please call police now", "chat-msg msg-user");
-        messagesEl.appendChild(msgContainer);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-
-        msgContainer = createMsgBox("Agent", "OK Calling Now", "chat-msg msg-peer");
-        messagesEl.appendChild(msgContainer);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
     });
 }
 
