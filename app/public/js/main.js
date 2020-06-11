@@ -1,8 +1,31 @@
 'use strict';
 
-var messagesEl, loginEl, usernameEl, passwordEl;
+var messagesEl, loginEl, usernameEl, passwordEl, loginmsgEl;
 window.onload = () => {
     const socket = io.connect(location.host);
+
+    loginEl = document.getElementById('login');
+    messagesEl = document.getElementById('messages');
+    usernameEl = document.getElementById('username');
+    passwordEl = document.getElementById('password');
+    loginmsgEl = document.getElementById("login-msg");
+    loginEl.onsubmit = function ($event) {
+        $event.preventDefault();
+        
+        loginmsgEl.style.visibility = 'hidden';
+        var userEmail = usernameEl.value;
+        var password = passwordEl.value;
+        socket.emit("login", {
+            user: userEmail,
+            password: password
+        });
+    };
+
+    socket.on("incorrect-user", () =>
+    {
+        loginmsgEl.style.visibility = 'visible';
+    });
+
     socket.on("loggedin", async data =>
     {
         loginEl.parentNode.style.visibility = 'hidden';
@@ -19,22 +42,6 @@ window.onload = () => {
         messagesEl.appendChild(msgContainer);
         messagesEl.scrollTop = messagesEl.scrollHeight;
     });
-
-    loginEl = document.getElementById('login');
-    messagesEl = document.getElementById('messages');
-    usernameEl = document.getElementById('username');
-    passwordEl = document.getElementById('password');
-
-    loginEl.onsubmit = function ($event) {
-        $event.preventDefault();
-        
-        var userEmail = usernameEl.value;
-        var password = passwordEl.value;
-        socket.emit("login", {
-            user: userEmail,
-            password: password
-        });
-    };
 }
 
 function createMsgBox($from, $msg, $class) {

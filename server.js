@@ -53,7 +53,7 @@ httpServer.listen(httpport, function(err) {
 let io = socketIO(httpServer);
 io.on("connection", socket =>
 {
-    console.log('socket connected:' + socket.id);
+    //console.log('socket connected:' + socket.id);
 
     const existingsocket = activeSockets.find(soc => soc == socket.id);
     if (!existingsocket)
@@ -63,20 +63,19 @@ io.on("connection", socket =>
 
     socket.on("login", (data) =>
     {
-        console.log('login' + data.user + "," + data.password);
-
         mysqlCon.query("select * from users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
         {
             if (err) throw err;
-            console.log(Object.keys(result).length);
             if (Object.keys(result).length > 0)
             {
-                console.log(result);
-                console.log(socket.id);
                 socket.emit("loggedin", 
                 {
                     status: 0
                 });
+            }
+            else
+            {
+                socket.emit("incorrect-user");
             }
         });
     });
