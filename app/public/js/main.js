@@ -3,7 +3,9 @@
 var messagesEl, loginEl, usernameEl, passwordEl;
 window.onload = () => {
 
-    const socket = io.connect("127.0.0.1:1210");
+    console.log(location.host);
+    
+    const socket = io.connect("http://127.0.0.1:1210");
     socket.on("loggedin", async data =>
     {
         loginEl.parentNode.style.visibility = 'hidden';
