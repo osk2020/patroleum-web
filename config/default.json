@@ -4,5 +4,11 @@
     "host": {
         "httpport": 1210,
         "httpsport": 1280
+    },
+    "db": {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "uos19851210",
+        "port": 3306
     }
 }

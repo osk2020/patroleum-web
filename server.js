@@ -5,39 +5,13 @@ const fs = require('fs');
 const config = require('config');
 const socketIO = require('socket.io');
 const mysql = require('mysql');
+const database = require('./app/middlewares/database');
 
 const   httpport = process.env.PORT || config.get('host').httpport || 1210,
         httpsport = process.env.SECURE_PORT || config.get('host').httpsport || 1280;
 
-var mysqlCon = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'uos19851210',
-    port: 3306
-});
 
-mysqlCon.connect(function(error)
-{
-    if (error) throw error;
-    console.log("MySQL Connected!");
-
-    mysqlCon.query("CREATE DATABASE patroleum CHARACTER SET utf8", function (err, result) 
-    {
-        if (err) 
-            console.log(err.name + "," + err.message);
-        console.log("Database Created!");
-        mysqlCon.query("use patroleum");
-        mysqlCon.query("CREATE TABLE users(`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `email` varchar(128) not null, `name` varchar(128) not null, `password` varchar(128) not null, `address` varchar(256) not null)", function(err, result)
-        {
-            if (err)
-                console.log(err.name + "," + err.message);
-            console.log("Users Table Created!");
-        });
-    });
-
-    mysqlCon.query("USE patroleum");
-
-});
+var mysqlCon = database.getDBConnection(config);
 
 let activeSockets = [];
 let httpServer = http.createServer(app);
@@ -63,7 +37,7 @@ io.on("connection", socket =>
 
     socket.on("login", (data) =>
     {
-        mysqlCon.query("select * from users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
+        mysqlCon.query("select * from patroleum.users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
         {
             if (err) throw err;
             if (Object.keys(result).length > 0)
