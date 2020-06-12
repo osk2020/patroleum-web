@@ -37,20 +37,28 @@ io.on("connection", socket =>
 
     socket.on("login", (data) =>
     {
-        mysqlCon.query("select * from patroleum.users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
+        mysqlCon.getConnection(function(err, connection)
         {
             if (err) throw err;
-            if (Object.keys(result).length > 0)
+
+            connection.query("select * from patroleum.users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
             {
-                socket.emit("loggedin", 
+                connection.release();
+
+                if (err) throw err;
+
+                if (Object.keys(result).length > 0)
                 {
-                    status: 0
-                });
-            }
-            else
-            {
-                socket.emit("incorrect-user");
-            }
+                    socket.emit("loggedin", 
+                    {
+                        status: 0
+                    });
+                }
+                else
+                {
+                    socket.emit("incorrect-user");
+                }
+            });
         });
     });
 
