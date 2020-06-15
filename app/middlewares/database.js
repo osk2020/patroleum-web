@@ -63,25 +63,25 @@ function createDatabaseAndTable(pool)
                 }
             }
             else 
-                console.log("Homes Table Created!");
-        });
-
-        pool.query("CREATE TABLE patroleum.users(`id` int NOT NULL AUTO_INCREMENT, `firstname` varchar(128) not null, `lastname` varchar(128) not null, `email` varchar(128) not null, `phonenumber` varchar(128) not null, `dispname` varchar(128) not null, `password` varchar(128) not null, `home_id` int not null, \
-                    PRIMARY KEY (`id`), FOREIGN KEY (`home_id`) REFERENCES patroleum.homes(`id`));", function(err, result)
-        {
-            if (err)
             {
-                if (err.code !== "ER_TABLE_EXISTS_ERROR")
+                console.log("Homes Table Created!");
+                pool.query("CREATE TABLE patroleum.users(`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `firstname` varchar(128) not null, `lastname` varchar(128) not null, `email` varchar(128) not null, `phonenumber` varchar(128) not null, `dispname` varchar(128) not null, `password` varchar(128) not null, `home_id` int not null, \
+                    FOREIGN KEY (`home_id`) REFERENCES patroleum.homes(`id`));", function(err, result)
                 {
-                    console.log(err.message);
-                    throw err;
-                }
+                    if (err)
+                    {
+                        if (err.code !== "ER_TABLE_EXISTS_ERROR")
+                        {
+                            console.log(err.message);
+                            throw err;
+                        }
+                    }
+                    else 
+                        console.log("Users Table Created!");
+                });
             }
-            else 
-                console.log("Users Table Created!");
         });
 
-        
         pool.query("USE patroleum");
     });
 
