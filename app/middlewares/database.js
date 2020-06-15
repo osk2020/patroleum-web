@@ -51,21 +51,6 @@ function createDatabaseAndTable(pool)
         }
         else
             console.log("Database Created!");
-    
-        pool.query("CREATE TABLE patroleum.users(`id` int NOT NULL AUTO_INCREMENT, `firstname` varchar(128) not null, `lastname` varchar(128) not null, `email` varchar(128) not null, `phonenumber` varchar(128) not null, `dispname` varchar(128) not null, `password` varchar(128) not null, `home_id` int not null, \
-                    PRIMARY KEY (`id`), FOREIGN KEY (`home_id`) REFERENCES patroleum.homes(`id`));", function(err, result)
-        {
-            if (err)
-            {
-                if (err.code !== "ER_TABLE_EXISTS_ERROR")
-                {
-                    console.log(err.message);
-                    throw err;
-                }
-            }
-            else 
-                console.log("Users Table Created!");
-        });
 
         pool.query("CREATE TABLE patroleum.homes(`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `address1` varchar(1024) not null, `address2` varchar(1022) not null, `city` varchar(256) not null, `state` varchar(256) not null, `postcode` varchar(128) not null, `country` varchar(128) not null, `sha` varchar(512) not null);", function(err, result)
         {
@@ -81,6 +66,22 @@ function createDatabaseAndTable(pool)
                 console.log("Homes Table Created!");
         });
 
+        pool.query("CREATE TABLE patroleum.users(`id` int NOT NULL AUTO_INCREMENT, `firstname` varchar(128) not null, `lastname` varchar(128) not null, `email` varchar(128) not null, `phonenumber` varchar(128) not null, `dispname` varchar(128) not null, `password` varchar(128) not null, `home_id` int not null, \
+                    PRIMARY KEY (`id`), FOREIGN KEY (`home_id`) REFERENCES patroleum.homes(`id`));", function(err, result)
+        {
+            if (err)
+            {
+                if (err.code !== "ER_TABLE_EXISTS_ERROR")
+                {
+                    console.log(err.message);
+                    throw err;
+                }
+            }
+            else 
+                console.log("Users Table Created!");
+        });
+
+        
         pool.query("USE patroleum");
     });
 
