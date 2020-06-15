@@ -9,6 +9,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    
+    <script src="js/main.js"></script>
+    <script src="js/house.js"></script>
+    <script src="js/user.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
+            e.preventDefault();
+            $(this).siblings('a.active').removeClass("active");
+            $(this).addClass("active");
+            var index = $(this).index();
+            $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+            $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+        });
+});
+    </script>
 </head>
 <style>
     html, body {
@@ -16,198 +35,190 @@
     }
 </style>
 <body class="bg-secondary">
-    <div class="container-fluid d-flex h-100 p-0 flex-column">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="height: 60px;">
+    <div class="container-fluid d-flex h-100 p-0 flex-column" id="root">
+        <nav class="navbar navbar-expand-md navbar-dark bg-2" style="height: 60px;">
             <img src="../images/logo-white.png" class="navbar-brand"/>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><img src="../images/login.png" class="rounded" style="height: 32px;"/>LogIn</a>
-                </li>
-            </ul>
-            </div>  
-        </nav>
-
-        <ul class="nav nav-pills nav-justified">
-            <li class="nav-item">
-                <a class="nav-link active text-light box-shadow--2dp" data-toggle="pill" href="#dashboard"><img src="../images/dashboard.png" class="rounded" style="height: 24px;"/> Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-light box-shadow--2dp" data-toggle="pill" href="#camera"><img src="../images/camera.png" class="rounded" style="height: 24px;"/> Camera</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-light box-shadow--2dp" data-toggle="pill" href="#user"><img src="../images/user.png" class="rounded" style="height: 24px;"/> User</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-light box-shadow--2dp" data-toggle="pill" href="#setting"><img src="../images/setting.png" class="rounded" style="height: 24px;"/> Settings</a>
-            </li>
-        </ul>
-        <div class="container-fluid row tab-content flex-fill d-flex justify-content-start">
-            <div class="tab-pane container-fluid active" style="margin: 10px;" id="dashboard"></div>
-            <div class="tab-pane container-fluid fade" style="margin: 10px;" id="camera">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <table class="table table-hover table-dark">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>URL</th>
-                                    <th>Address</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Cam-1</td>
-                                    <td>rtsp://192.168.1.120/sdp</td>
-                                    <td></td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Cam-2</td>
-                                    <td>rtsp://192.168.1.120/sdp</td>
-                                    <td></td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Cam-3</td>
-                                    <td>rtsp://192.168.1.120/sdp</td>
-                                    <td></td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <ul class="pagination pagination-sm justify-content-center" style="margin-top: 10px;">
-                            <li class="page-item"><a class="page-link" href="#">&lt;&lt;</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">&gt;&gt;</a></li>
-                        </ul>
-                    </div>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav nav nav-pills">
+                    <li class="nav-item pill-1" style="margin-right:20px;">
+                        <a class="nav-link active text-light" data-toggle="pill" href="#dashboard"><img src="../images/dashboard.png" class="rounded" style="height: 24px;"/> Dashboard</a>
+                    </li>
+                    <li class="nav-item" style="margin-right:20px;">
+                        <a class="nav-link text-light" data-toggle="pill" href="#camera"><img src="../images/camera.png" class="rounded" style="height: 24px;"/> Camera</a>
+                    </li>
+                    <li class="nav-item" style="margin-right:20px;">
+                        <a class="nav-link text-light" data-toggle="pill" href="#user"><img src="../images/user.png" class="rounded" style="height: 24px;"/> House & User</a>
+                    </li>
+                    <li class="nav-item" style="margin-right:20px;">
+                        <a class="nav-link text-light" data-toggle="pill" href="#setting"><img src="../images/setting.png" class="rounded" style="height: 24px;"/> Settings</a>
+                    </li>
+                </ul>
                 
-                    <div class="card col-sm-4 shadow">
-                        <div class="card-body">
-                            <form class="needs-validation" novalidate>
-                                <div class="form-group">
-                                    <label for="dispname">Display Name:</label>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter display name" id="cam_displayname" required/>
-                                </div>
-                                <div class="form-group">
-                                    <label for="camurl">Camera URL:</label>
-                                    <input type="url" class="form-control form-control-sm" placeholder="Enter camera url" id="cam_camurl"  required/>
-                                </div>
-                                <div class="form-group">
-                                    <label for="camaddr">Address:</label>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter address" id="cam_address"  required/>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block box-shadow--16dp">Add</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="collapse navbar-collapse justify-content-end">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><img src="../images/login.png" class="rounded" style="height: 32px;"/>LogIn</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="tab-pane container-fluid fade" style="margin: 10px;" id="user">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <table class="table table-hover table-dark">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Address</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>12343234</td>
-                                    <td>12343234@gmail.com</td>
-                                    <td>ShenYang, China</td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12343234</td>
-                                    <td>12343234@gmail.com</td>
-                                    <td>ShenYang, China</td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12343234</td>
-                                    <td>12343234@gmail.com</td>
-                                    <td>ShenYang, China</td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12343234</td>
-                                    <td>12343234@gmail.com</td>
-                                    <td>ShenYang, China</td>
-                                    <td>
-                                        <img src="../images/update.png" class="rounded" style="height: 16px;"/>
-                                        <img src="../images/remove.png" class="rounded" style="height: 16px;"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <ul class="pagination pagination-sm justify-content-center" style="margin-top: 10px;">
-                            <li class="page-item"><a class="page-link" href="#">&lt;&lt;</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">&gt;&gt;</a></li>
-                        </ul>
+        </nav>
+        <div class="container-fluid row tab-content flex-fill d-flex justify-content-start" style="margin: 0px;padding: 0px;">
+            <div class="tab-pane container-fluid justify-content-start my-auto active" id="dashboard">
+            </div>
+            <div class="tab-pane container-fluid justify-content-start my-auto fade" id="camera">
+            </div>
+            <div class="tab-pane container-fluid justify-content-start fade" id="user">
+                <div class="row" style="height: 100%;">
+                    <div class="col-md-1 bhoechie-tab-menu" style="background-color: #333333;">
+                        <div class="list-group">
+                          <a href="#" class="list-group-item active text-center">
+                            <h4 class="far fa-address-card"></h4><br/>All List
+                          </a>
+                          <a href="#" class="list-group-item text-center">
+                            <h4 class="fas fa-house-user"></h4><br/>House
+                          </a>
+                          <a href="#" class="list-group-item text-center">
+                            <h4 class="fas fa-user"></h4><br/>User
+                          </a>
+                        </div>
                     </div>
-                
-                    <div class="card col-sm-4 shadow">
-                        <div class="card-body">
-                            <form class="needs-validation" novalidate>
-                                <div class="form-group">
-                                    <label for="name">User Name:</label>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter user name" id="user_username" required/>
+                    <div class="col-sm-11 bhoechie-tab">
+                        <div class="container register bhoechie-tab-content active">
+                        </div>
+                        <div class="container register bhoechie-tab-content ">
+                            <div class="row">
+                                <div class="col-md-3 register-left">
+                                    <img src="../images/house.png" alt=""/>
+                                    <h3>Welcome</h3>
+                                    <p>Please register Home adress and users, members of familes</p>
                                 </div>
-                                <div class="form-group">
-                                    <label for="email">Email Address:</label>
-                                    <input type="email" class="form-control form-control-sm" placeholder="Enter email" id="user_email"  required/>
+                                <div class="col-md-9 register-right">
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                            <h3 class="register-heading">Apply Home Adress</h3>
+                                            <div class="row register-form">
+                                                <div class="col-md-12 was-validated" id="div-home-form">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 control-label vertical-center" for="textinput">Address 1:</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" placeholder="Address Line 1 *" class="form-control" id="txt-home-address-1" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 control-label vertical-center" for="textinput">Address 2:</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" placeholder="Address Line 2 *" class="form-control" id="txt-home-address-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 control-label vertical-center" for="textinput">City:</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" placeholder="City *" class="form-control" id="txt-home-city" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 control-label vertical-center" for="textinput">State:</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" placeholder="State *" class="form-control" id="txt-home-state" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 control-label vertical-center" for="textinput">Post Code:</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" placeholder="Post/Zip Code *" class="form-control" id="txt-home-postcode" required>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 control-label vertical-center" for="textinput">Country:</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" placeholder="Country *" class="form-control" id="txt-home-country" required>
+                                                        </div>
+                                                    </div>
+                                                    <input type="submit" class="btnRegister"  value="Register" id="btn-home-register"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="pwd">Password:</label>
-                                    <input type="password" class="form-control form-control-sm" placeholder="Enter password" id="user_password"  required/>
+                            </div>
+                        </div>
+                        <div class="container register bhoechie-tab-content">
+                            <div class="row">
+                                <div class="col-md-3 register-left">
+                                    <img src="../images/users.png" alt=""/>
+                                    <h3>Welcome</h3>
+                                    <p>Please register Home adress and users, members of familes</p>
                                 </div>
-                                <div class="form-group">
-                                    <label for="confirm">Confirm Password:</label>
-                                    <input type="password" class="form-control form-control-sm" placeholder="Enter password again" id="user_confirm"  required/>
+                                <div class="col-md-9 register-right">
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                            <h3  class="register-heading">Register User Details</h3>
+                                            <div class="row register-form was-validated">
+                                                <div class="col-md-12">
+                                                    <label class="control-label" for="textinput">Home Address:</label>
+                                                    <div class="form-group">
+                                                        <select class="form-control" id="select-user-addresses" required>
+                                                            <option class="hidden"  selected disabled>Please select User's Home Address</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">First Name:</label>
+                                                        <input type="text" class="form-control" id="txt-user-firstname" placeholder="First Name *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Last Name:</label>
+                                                        <input type="text" class="form-control" id="txt-user-lastname" placeholder="Last Name *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Email:</label>
+                                                        <input type="email" class="form-control" id="txt-user-email" placeholder="Email *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Phone Number:</label>
+                                                        <input type="text" maxlength="10" minlength="10" id="txt-user-phonenumber" class="form-control" placeholder="Phone *" value="" required/>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Display Name:</label>
+                                                        <input type="text" class="form-control" id="txt-user-dispname" placeholder="Display Name *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Password:</label>
+                                                        <input type="password" class="form-control" id="txt-user-password" placeholder="Password *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Confirm Password:</label>
+                                                        <input type="password" class="form-control" id="txt-user-confirm" placeholder="Confirm Password *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Gender:</label>
+                                                        <div class="maxl">
+                                                            <label class="radio inline"> 
+                                                                <input type="radio" name="gender" value="male" id="radio-user-gender-male" checked>
+                                                                <span> Male </span> 
+                                                            </label>
+                                                            <label class="radio inline"> 
+                                                                <input type="radio" name="gender" value="female" id="radio-user-gender-female">
+                                                                <span>Female </span> 
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <input type="submit" class="btnRegister"  value="Register" id="btn-user-register"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="address">Address:</label>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter your address" id="user_address" />
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block box-shadow--16dp">Add</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

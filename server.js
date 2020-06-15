@@ -6,6 +6,7 @@ const config = require('config');
 const socketIO = require('socket.io');
 const mysql = require('mysql');
 const database = require('./app/middlewares/database');
+const common = require("./app/middlewares/common");
 
 const   httpport = process.env.PORT || config.get('host').httpport || 1210,
         httpsport = process.env.SECURE_PORT || config.get('host').httpsport || 1280;
@@ -64,14 +65,67 @@ io.on("connection", socket =>
 
     socket.on("logout", (data) =>
     {
-        console.log('logout');
+        //console.log('logout');
     });
 
     socket.on("disconnect", () =>
     {
         activeSockets = activeSockets.filter(soc => soc !== socket.id);
 
-        console.log('socket disconnected.');
+        //console.log('socket disconnected.');
+    });
+
+    socket.on("register-home", (data) =>
+    {
+        if (!common.validateToken(data.token))
+            return;
+
+        mysqlCon.getConnection(function(err, connection){
+            if (err) throw err;
+
+            var sha = common.getHashString(data);
+            
+            connection.query("select * from patroleum.homes where sha='" + sha + "'", function(err, result)
+            {
+                if (err)
+                {
+                    socket.emit("server-error", {
+                        error: err.message
+                    });
+                    return;
+                }
+                
+                if (result.length > 0)
+                {
+                    socket.emit("exist-record-register-home");
+                    return;
+                }
+
+                connection.query("insert into patroleum.homes(address1, address2, city, state, postcode, country, sha) values('" + 
+                    data.address1 + "', '" + data.address2 + "', '" + data.city + "', '" + data.state + "', '" +
+                    data.postcode + "', '" + data.country + "', '" + sha + "')", function(err, result)
+                {
+                    if (err)
+                    {
+                        //throw err;
+                        socket.emit("fail-register-home", {
+                            error: err.message
+                        });
+                    }
+                    else
+                    {
+                        connection.query("")
+                        socket.emit("ok-register-home", {
+                            sha: sha
+                        });        
+                    }
+
+                    connection.release();
+                });
+            });
+            
+        });
+
+    
     });
 });
-
