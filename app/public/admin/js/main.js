@@ -1,6 +1,5 @@
 'use strict';
 
-const socket = io.connect(location.host);
 function showAlert($header, $content, $type)
 {
     hideAlert();

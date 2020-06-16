@@ -2,8 +2,6 @@
 
 var messagesEl, loginEl, usernameEl, passwordEl, loginmsgEl;
 window.onload = () => {
-    const socket = io.connect(location.host);
-
     loginEl = document.getElementById('login');
     messagesEl = document.getElementById('messages');
     usernameEl = document.getElementById('username');
@@ -21,19 +19,7 @@ window.onload = () => {
         });
     };
 
-    socket.on("incorrect-user", () =>
-    {
-        loginmsgEl.style.visibility = 'visible';
-    });
-
-    socket.on("loggedin", async data =>
-    {
-        loginEl.parentNode.style.visibility = 'hidden';
-        
-        var msgContainer = createMsgBox("Patroleum", "Logged In", "chat-msg msg-info");
-        messagesEl.appendChild(msgContainer);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-    });
+    
 }
 
 function createMsgBox($from, $msg, $class) {

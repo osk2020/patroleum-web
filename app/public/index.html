@@ -2,17 +2,96 @@
 <html>
     <head>
         <title>Patroleum</title>
-    </head>
-    <body>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <a href="admin/" target="_blank">Admin</a>
-            </li>
-            <li class="list-group-item">
-                <a href="client/" target="_blank">Client</a>
-            </li>
-        </ul>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+        <script src="js/global.js"></script>
         
+    </head>
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
+    <script>
+        window.onload = () =>
+        {
+            var loginEl = document.getElementById("btn-login-login");
+            var usernameEl = document.getElementById("txt-login-username");
+            var passwordEl = document.getElementById("txt-login-password");
+            loginEl.onclick = function ($event) {
+                $event.preventDefault();
+                var username = usernameEl.value;
+                var password = passwordEl.value;
+
+                if (!username || username === "" || !password || password === "")
+                {
+                    return;
+                }
+
+                socket.emit("login", {
+                    user: username,
+                    password: password
+                });
+            };
+
+            socket.on("incorrect-user", () =>
+            {
+                usernameEl.value = "";
+                passwordEl.value = "";
+            });
+
+            socket.on("loggedin", async data =>
+            {
+                console.log(data.role);
+                console.log(data.token);
+                console.log(location.host + "/" + data.role + "?_token=" + data.token);
+                console.log(location.href);
+                console.log(location.pathname);
+                window.location.href = location.href + data.role + "?_token=" + data.token;
+                
+            });
+        };
+    </script>
+    <body>
+        <div class="flex-fill d-flex" style="height: 100%;">
+        <div class="container register bhoechie-tab">
+            <div class="row">
+                <div class="col-md-5 register-left">
+                    <img src="images/users.png" alt=""/>
+                    <h3>Welcome to Patroleum</h3>
+                </div>
+                <div class="col-md-7 register-right">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <h4  class="register-heading">Please Login Your Account</h4>
+                            <div class="row register-form was-validated">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="textinput">User Name/Email:</label>
+                                        <input type="text" class="form-control" id="txt-login-username" placeholder="User Name or Email *" value="" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="textinput">Password:</label>
+                                        <input type="password" class="form-control" id="txt-login-password" placeholder="Password *" value="" required/>
+                                    </div>
+                                    <input type="submit" class="btnRegister" value="Log In" id="btn-login-login"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
     </body>
 </html>
 

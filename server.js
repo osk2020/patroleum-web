@@ -1,5 +1,7 @@
 const https = require('https');
 const http = require('http');
+const url = require('url');
+const path = require('path');
 const app = require('./app');
 const fs = require('fs');
 const config = require('config');
@@ -14,14 +16,67 @@ const   httpport = process.env.PORT || config.get('host').httpport || 1210,
 
 var mysqlCon = database.getDBConnection(config);
 
+let baseDir = "./app/public";
 let activeSockets = [];
-let httpServer = http.createServer(app);
+let activeUsers = new Object();
+
+let httpServer = http.createServer();
+
 httpServer.listen(httpport, function(err) {
     if (err) {
-        throw err
+        throw err;
     }
 
     console.log('Insecure server is listening on port ' + httpport + "...");
+});
+
+httpServer.on('request', (req, res) => {
+    var method = req.method;
+    var uri = url.parse(req.url);
+    var pathname = uri.pathname;
+    var query = uri.query;
+
+    console.log(uri);
+    try
+    {
+        var filename = path.join(baseDir, pathname);
+        if (method === 'GET' && pathname === '/')
+        {
+            filename = path.join(filename, "index.html");
+            res.writeHead(200, {"Content-Type": "text/html"});
+            fs.createReadStream(filename).pipe(res);
+        }
+        else if (method === 'GET' && pathname === "/admin" && !query.includes('_token'))
+        {
+            filename = path.join(baseDir, '/', 'index.html');
+            res.writeHead(200, {"Content-Type": "text/html"});
+            fs.createReadStream(filename).pipe(res);
+        }
+        else if (method === 'GET' && pathname === "/admin" && query.includes('_token'))
+        {
+            filename = path.join(filename, "index.html");
+            res.writeHead(200, {"Content-Type": "text/html"});
+            fs.createReadStream(filename).pipe(res);
+        }
+        else
+        {
+            var filestream = fs.createReadStream(filename);
+            filestream.pipe(res);
+            filestream.on('open', function()
+            {
+                res.writeHead(200);
+            });
+            filestream.on('error', function (err)
+            {
+
+            });
+        }
+    }
+    catch (e) 
+    {
+        res.writeHead(500);
+        res.end(e.message);
+    }
 });
 
 
@@ -41,6 +96,19 @@ io.on("connection", socket =>
         mysqlCon.getConnection(function(err, connection)
         {
             if (err) throw err;
+            if (data.user.toLowerCase() === "admin" && data.password === "admin")
+            {
+                var token = common.getHashString(data);
+                socket.emit("loggedin", 
+                {
+                    role: "admin",
+                    token: token
+                });
+
+                activeUsers[socket.id] = token;
+
+                return;
+            }
 
             connection.query("select * from patroleum.users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
             {
@@ -50,9 +118,11 @@ io.on("connection", socket =>
 
                 if (Object.keys(result).length > 0)
                 {
+                    var role = result.role == 0 ? "admin" : "client";
                     socket.emit("loggedin", 
                     {
-                        status: 0
+                        role: role,
+                        token: common.getHashString(data)
                     });
                 }
                 else
