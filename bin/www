@@ -23,6 +23,7 @@ const   httpport = normalizePort(process.env.PORT || config.get('host').httpport
 
 app.set('port', httpport);
 
+app.listen(httpport);
 
 let activeSockets = [];
 let activeUsers = new Object();
@@ -31,136 +32,17 @@ let activeUsers = new Object();
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+//var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(httpport);
-server.on('error', onError);
-server.on('listening', onListening);
+//server.listen(httpport);
+//server.on('error', onError);
+//server.on('listening', onListening);
 
 var mysqlCon = database.getDBConnection(config);
-let io = socketIO(server);
-io.on("connection", socket =>
-{
-    //console.log('socket connected:' + socket.id);
-
-    const existingsocket = activeSockets.find(soc => soc == socket.id);
-    if (!existingsocket)
-    {
-        activeSockets.push(socket.id);
-    }
-
-    socket.on("login", (data) =>
-    {
-        mysqlCon.getConnection(function(err, connection)
-        {
-            if (err) throw err;
-            if (data.user.toLowerCase() === "admin" && data.password === "admin")
-            {
-                var token = common.getHashString(data);
-                socket.emit("loggedin", 
-                {
-                    role: "admin",
-                    token: token
-                });
-
-                activeUsers[socket.id] = token;
-
-                return;
-            }
-
-            connection.query("select * from patroleum.users where email='" + data.user + "' and password='" + data.password + "'", function(err, result)
-            {
-                connection.release();
-
-                if (err) throw err;
-
-                if (Object.keys(result).length > 0)
-                {
-                    var role = result.role == 0 ? "admin" : "client";
-                    socket.emit("loggedin", 
-                    {
-                        role: role,
-                        token: common.getHashString(data)
-                    });
-                }
-                else
-                {
-                    socket.emit("incorrect-user");
-                }
-            });
-        });
-    });
-
-    socket.on("logout", (data) =>
-    {
-        //console.log('logout');
-    });
-
-    socket.on("disconnect", () =>
-    {
-        activeSockets = activeSockets.filter(soc => soc !== socket.id);
-
-        //console.log('socket disconnected.');
-    });
-
-    socket.on("register-home", (data) =>
-    {
-        if (!common.validateToken(data.token))
-            return;
-
-        mysqlCon.getConnection(function(err, connection){
-            if (err) throw err;
-
-            var sha = common.getHashString(data);
-            
-            connection.query("select * from patroleum.homes where sha='" + sha + "'", function(err, result)
-            {
-                if (err)
-                {
-                    socket.emit("server-error", {
-                        error: err.message
-                    });
-                    return;
-                }
-                
-                if (result.length > 0)
-                {
-                    socket.emit("exist-record-register-home");
-                    return;
-                }
-
-                connection.query("insert into patroleum.homes(address1, address2, city, state, postcode, country, sha) values('" + 
-                    data.address1 + "', '" + data.address2 + "', '" + data.city + "', '" + data.state + "', '" +
-                    data.postcode + "', '" + data.country + "', '" + sha + "')", function(err, result)
-                {
-                    if (err)
-                    {
-                        //throw err;
-                        socket.emit("fail-register-home", {
-                            error: err.message
-                        });
-                    }
-                    else
-                    {
-                        connection.query("")
-                        socket.emit("ok-register-home", {
-                            sha: sha
-                        });        
-                    }
-
-                    connection.release();
-                });
-            });
-            
-        });
-
-    
-    });
-});
 
 /**
  * Normalize a port into a number, string, or false.
