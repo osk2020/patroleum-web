@@ -5,8 +5,15 @@ var path = require('path');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log(req.query);
-  res.render("admin/index");
+  if (Object(req.query).hasOwnProperty("_token"))
+  {
+    res.render("admin/index");
+  }
+  else
+  {
+    res.redirect("/");
+  }
+
 });
 
 module.exports = router;

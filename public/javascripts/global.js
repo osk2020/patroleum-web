@@ -1,3 +1,3 @@
 'use strict';
 
-const socket = ""; //io.connect(location.host);
+const socket = io.connect(location.host);
