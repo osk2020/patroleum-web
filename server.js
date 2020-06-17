@@ -25,7 +25,7 @@ let httpServer = http.createServer(function (request, response)
     var uri = url.parse(request.url);
 
     var filePath = path.join(baseDir, uri.pathname);
-    if (String(filePath).endsWith('/') ||String(filePath).endsWith('\\')) {
+    if (String(uri.pathname).endsWith('/')) {
         filePath = path.join(filePath, 'index.html');
     }
 
