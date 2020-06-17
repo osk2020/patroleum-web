@@ -20,7 +20,57 @@ let baseDir = "./app/public";
 let activeSockets = [];
 let activeUsers = new Object();
 
-let httpServer = http.createServer();
+let httpServer = http.createServer(function (request, response)
+{
+    var uri = url.parse(request.url);
+
+    var filePath = path.join(baseDir, uri.pathname);
+    if (String(filePath).endsWith('/') ||String(filePath).endsWith('\\')) {
+        filePath = path.join(filePath, 'index.html');
+    }
+
+    console.log('filePath ', filePath);
+
+    var extname = String(path.extname(filePath)).toLowerCase();
+    var mimeTypes = {
+        '.html': 'text/html',
+        '.js': 'text/javascript',
+        '.css': 'text/css',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpg': 'image/jpg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.wav': 'audio/wav',
+        '.mp4': 'video/mp4',
+        '.woff': 'application/font-woff',
+        '.ttf': 'application/font-ttf',
+        '.eot': 'application/vnd.ms-fontobject',
+        '.otf': 'application/font-otf',
+        '.wasm': 'application/wasm'
+    };
+
+    var contentType = mimeTypes[extname] || 'application/octet-stream';
+
+    fs.readFile(filePath, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT') {
+                fs.readFile('./404.html', function(error, content) {
+                    response.writeHead(404, { 'Content-Type': 'text/html' });
+                    response.end(content, 'utf-8');
+                });
+            }
+            else {
+                response.writeHead(500);
+                response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
+            }
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(content, 'utf-8');
+        }
+    });
+});
 
 httpServer.listen(httpport, function(err) {
     if (err) {
@@ -29,56 +79,6 @@ httpServer.listen(httpport, function(err) {
 
     console.log('Insecure server is listening on port ' + httpport + "...");
 });
-
-httpServer.on('request', (req, res) => {
-    var method = req.method;
-    var uri = url.parse(req.url);
-    var pathname = uri.pathname;
-    var query = uri.query;
-
-    console.log(uri);
-    try
-    {
-        var filename = path.join(baseDir, pathname);
-        if (method === 'GET' && pathname === '/')
-        {
-            filename = path.join(filename, "index.html");
-            res.writeHead(200, {"Content-Type": "text/html"});
-            fs.createReadStream(filename).pipe(res);
-        }
-        else if (method === 'GET' && pathname === "/admin" && !query.includes('_token'))
-        {
-            filename = path.join(baseDir, '/', 'index.html');
-            res.writeHead(200, {"Content-Type": "text/html"});
-            fs.createReadStream(filename).pipe(res);
-        }
-        else if (method === 'GET' && pathname === "/admin" && query.includes('_token'))
-        {
-            filename = path.join(filename, "index.html");
-            res.writeHead(200, {"Content-Type": "text/html"});
-            fs.createReadStream(filename).pipe(res);
-        }
-        else
-        {
-            var filestream = fs.createReadStream(filename);
-            filestream.pipe(res);
-            filestream.on('open', function()
-            {
-                res.writeHead(200);
-            });
-            filestream.on('error', function (err)
-            {
-
-            });
-        }
-    }
-    catch (e) 
-    {
-        res.writeHead(500);
-        res.end(e.message);
-    }
-});
-
 
 let io = socketIO(httpServer);
 io.on("connection", socket =>

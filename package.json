@@ -4,7 +4,7 @@
     "description": "Web Server for Patroleum",
     "main": "server.js",
     "scripts": {
-        "build": "npm install",
+        "dev": "nodemon server.js",
         "start": "node server.js"
     },
     "repository": {},
@@ -19,6 +19,7 @@
         "cors": "^2.8.5",
         "mysql": "^2.18.1",
         "socket.io": "^2.3.0",
-        "crypto": "^1.0.1"
+        "crypto": "^1.0.1",
+        "nodemon": "2.0.4"
     }
 }
