@@ -1,88 +1,48 @@
-const https = require('https');
-const http = require('http');
-const url = require('url');
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('patroleum-software:server');
+var http = require('http');
 const path = require('path');
-const app = require('./app');
-const fs = require('fs');
 const config = require('config');
 const socketIO = require('socket.io');
 const mysql = require('mysql');
-const database = require('./app/middlewares/database');
-const common = require("./app/middlewares/common");
+const database = require('../middlewares/database');
+const common = require("../middlewares/common");
 
-const   httpport = process.env.PORT || config.get('host').httpport || 1210,
-        httpsport = process.env.SECURE_PORT || config.get('host').httpsport || 1280;
+/**
+ * Get port from environment and store in Express.
+ */
+
+const   httpport = normalizePort(process.env.PORT || config.get('host').httpport || 1210),
+        httpsport = normalizePort(process.env.SECURE_PORT || config.get('host').httpsport || 1280);
+
+app.set('port', httpport);
 
 
-var mysqlCon = database.getDBConnection(config);
-
-let baseDir = "./app/public";
 let activeSockets = [];
 let activeUsers = new Object();
 
-let httpServer = http.createServer(function (request, response)
-{
-    var uri = url.parse(request.url);
+/**
+ * Create HTTP server.
+ */
 
-    var filePath = path.join(baseDir, uri.pathname);
-    if (String(uri.pathname).endsWith('/') ||
-            String(uri.pathname).endsWith("/admin")) 
-    {
-        filePath = path.join(filePath, 'index.html');
-    }
+var server = http.createServer(app);
 
-    console.log('filePath ', filePath);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
 
-    var extname = String(path.extname(filePath)).toLowerCase();
-    var mimeTypes = {
-        '.html': 'text/html',
-        '.js': 'text/javascript',
-        '.css': 'text/css',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.gif': 'image/gif',
-        '.svg': 'image/svg+xml',
-        '.wav': 'audio/wav',
-        '.mp4': 'video/mp4',
-        '.woff': 'application/font-woff',
-        '.ttf': 'application/font-ttf',
-        '.eot': 'application/vnd.ms-fontobject',
-        '.otf': 'application/font-otf',
-        '.wasm': 'application/wasm'
-    };
+server.listen(httpport);
+server.on('error', onError);
+server.on('listening', onListening);
 
-    var contentType = mimeTypes[extname] || 'application/octet-stream';
-
-    fs.readFile(filePath, function(error, content) {
-        if (error) {
-            if(error.code == 'ENOENT') {
-                fs.readFile('./404.html', function(error, content) {
-                    response.writeHead(404, { 'Content-Type': 'text/html' });
-                    response.end(content, 'utf-8');
-                });
-            }
-            else {
-                response.writeHead(500);
-                response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
-            }
-        }
-        else {
-            response.writeHead(200, { 'Content-Type': contentType });
-            response.end(content, 'utf-8');
-        }
-    });
-});
-
-httpServer.listen(httpport, function(err) {
-    if (err) {
-        throw err;
-    }
-
-    console.log('Insecure server is listening on port ' + httpport + "...");
-});
-
-let io = socketIO(httpServer);
+var mysqlCon = database.getDBConnection(config);
+let io = socketIO(server);
 io.on("connection", socket =>
 {
     //console.log('socket connected:' + socket.id);
@@ -201,3 +161,63 @@ io.on("connection", socket =>
     
     });
 });
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof httpport === 'string'
+    ? 'Pipe ' + httpport
+    : 'Port ' + httpport;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
