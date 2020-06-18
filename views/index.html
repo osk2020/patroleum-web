@@ -49,13 +49,7 @@
 
             socket.on("loggedin", async data =>
             {
-                console.log(data.role);
-                console.log(data.token);
-                console.log(location.host + "/" + data.role + "?_token=" + data.token);
-                console.log(location.href);
-                console.log(location.pathname);
                 window.location.href = location.href + data.role + "?_token=" + data.token;
-                
             });
         };
     </script>

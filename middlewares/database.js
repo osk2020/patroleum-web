@@ -65,7 +65,7 @@ function createDatabaseAndTable(pool)
             else 
             {
                 console.log("Homes Table Created!");
-                pool.query("CREATE TABLE patroleum.users(`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `firstname` varchar(128) not null, `lastname` varchar(128) not null, `email` varchar(128) not null, `phonenumber` varchar(128) not null, `dispname` varchar(128) not null, `password` varchar(128) not null, `home_id` int not null, `role` int not null, \
+                pool.query("CREATE TABLE patroleum.users(`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `firstname` varchar(128) not null, `lastname` varchar(128) not null, `email` varchar(128) not null, `phonenumber` varchar(128) not null, `dispname` varchar(128) not null, `password` varchar(128) not null, `gender` varchar(32) not null, `home_id` int not null, `role` varchar(32) not null, \
                     FOREIGN KEY (`home_id`) REFERENCES patroleum.homes(`id`));", function(err, result)
                 {
                     if (err)

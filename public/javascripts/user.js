@@ -16,8 +16,8 @@ function initUserRegisterForm()
     dispnameEl = document.getElementById("txt-user-dispname");
     passwordEl = document.getElementById("txt-user-password");
     confirmEl = document.getElementById("txt-user-confirm");
-    maleEl = document.getElementById("radio-user-male");
-    femaleEl = document.getElementById("radio-user-female");
+    maleEl = document.getElementById("radio-user-gender-male");
+    femaleEl = document.getElementById("radio-user-gender-female");
     registerEl = document.getElementById("btn-user-register");
 
     registerEl.onclick = function ($event) {
@@ -45,39 +45,30 @@ function initUserRegisterForm()
             confirmEl.value = "";
         }
 
-        /*
-        socket.emit("register-home", {
-            token: "",
-            address1: address1,
-            address2: address2,
-            city: city,
-            state: state,
-            postcode: postcode,
-            country: country
+        gender = 'male';
+        if (femaleEl.checked == true)
+            gender = 'female';
+
+        
+        socket.emit("register-user", {
+            token: getToken(),
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            phonenumber: phonenumber,
+            dispname: dispname,
+            password: password,
+            gender: gender,
+            address: address
         });
-        */
+        
     }
 
-    socket.on("ok-register-home", ({sha}) => {
-        showAlert("Success!", "The Home Address has been successfully registered", "alert-success");
-
-        var userAddressListEl = document.getElementById("user-addresses-list");
-        var option = document.createElement("option");
-
-        if (!address2 || address2 === "")
-            option.innerText = address1 + ", " + city + ", " + state + ", " + country;
-        else
-            option.innerText = address1 + ", " + address2 + ", " + city + ", " + state + ", " + country;
-        userAddressListEl.appendChild(option);
+    socket.on("ok-register-user", () => {
+        showAlert("Success!", "The User Info has been successfully registered", "alert-success");
     });
 
-    socket.on("fail-register-home", ({error}) => {
+    socket.on("fail-register-user", ({error}) => {
         showAlert("Fail!", error, "alert-danger");
     });
-
-    socket.on("exist-record-register-home", () =>
-    {
-        showAlert("Warning!", "This Address exist already in Database", "alert-warning");
-    });
-
 }

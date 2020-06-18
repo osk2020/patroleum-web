@@ -1,13 +1,20 @@
 var express = require('express');
 var router = express.Router();
-
+var common = require('../middlewares/common');
 var path = require('path');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if (Object(req.query).hasOwnProperty("_token"))
   {
-    res.render("admin/index");
+    if (common.validateToken(req.query._token))
+    {
+      res.render("admin/index");
+    }
+    else
+    {
+      res.redirect("/");
+    }
   }
   else
   {

@@ -32,7 +32,7 @@ function initHouseRegisterForm()
         }
 
         socket.emit("register-home", {
-            token: "",
+            token: getToken(),
             address1: address1,
             address2: address2,
             city: city,

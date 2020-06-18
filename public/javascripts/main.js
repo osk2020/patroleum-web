@@ -26,7 +26,17 @@ function hideAlert()
     $("#myAlert").alert('close');
 }
 
+function getToken()
+{
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    
+    return urlParams.get('_token');
+}
+
 window.onload = () => {
     initHouseRegisterForm();
     initUserRegisterForm();
+
+
 }

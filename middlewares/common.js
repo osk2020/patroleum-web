@@ -1,7 +1,24 @@
 var hash = require('crypto');
 
+module.exports.updateToken = function(token)
+{
+    if (global.activeUsers[token] !== null)
+    {
+        global.activeUsers[token].date = Math.floor(Date.now() / 1000);
+    }
+}
+
 module.exports.validateToken = function(token)
 {
+    console.log(token);
+    console.log(global.activeUsers);
+    if (global.activeUsers[token] == null)
+    {
+        return false;
+    }
+
+    this.updateToken(token);
+
     return true;
 }
 
