@@ -46,18 +46,25 @@ function initHouseRegisterForm()
         showAlert("Success!", "The Home Address has been successfully registered", "alert-success");
 
         var userAddressListEl = document.getElementById("select-user-addresses");
-        var option = document.createElement("option");
+        var cameraAddressListEl = document.getElementById("select-camera-addresses");
+        var option1 = document.createElement("option");
+        var option2 = document.createElement("option");
 
         if (!address2 || address2 === "")
         {
-            option.innerText = address1 + ", " + city + ", " + state + ", " + country;
+            option1.innerText = address1 + ", " + city + ", " + state + ", " + country;
+            option2.innerText = address1 + ", " + city + ", " + state + ", " + country;
         }
         else
         {
-            option.innerText = address1 + ", " + address2 + ", " + city + ", " + state + ", " + country;
+            option1.innerText = address1 + ", " + address2 + ", " + city + ", " + state + ", " + country;
+            option2.innerText = address1 + ", " + address2 + ", " + city + ", " + state + ", " + country;
         }
-        option.value = sha;        
-        userAddressListEl.appendChild(option);
+        option1.value = sha;        
+        option2.value = sha;
+        
+        userAddressListEl.appendChild(option1);
+        cameraAddressListEl.appendChild(option2);
     });
 
     socket.on("fail-register-home", ({error}) => {

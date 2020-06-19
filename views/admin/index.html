@@ -14,20 +14,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     
     <script src="../javascripts/global.js"></script>
-    <script src="../javascripts/main.js"></script>
+    <script src="../javascripts/camera.js"></script>
     <script src="../javascripts/house.js"></script>
     <script src="../javascripts/user.js"></script>
     <script>
         $(document).ready(function() {
             $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
-            e.preventDefault();
-            $(this).siblings('a.active').removeClass("active");
-            $(this).addClass("active");
-            var index = $(this).index();
-            $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
-            $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+                e.preventDefault();
+                $(this).siblings('a.active').removeClass("active");
+                $(this).addClass("active");
+                var index = $(this).index();
+                $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+                $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+            });
+
+            $("div.camera-tab-menu>div.list-group>a").click(function(e) {
+                e.preventDefault();
+                $(this).siblings('a.active').removeClass("active");
+                $(this).addClass("active");
+                var index = $(this).index();
+                $("div.camera-tab>div.camera-tab-content").removeClass("active");
+                $("div.camera-tab>div.camera-tab-content").eq(index).addClass("active");
+            });
         });
-});
     </script>
 </head>
 <style>
@@ -68,9 +77,67 @@
             </div>
         </nav>
         <div class="container-fluid row tab-content flex-fill d-flex justify-content-start" style="margin: 0px;padding: 0px;">
-            <div class="tab-pane container-fluid justify-content-start my-auto active" id="dashboard">
+            <div class="tab-pane container-fluid justify-content-start active" id="dashboard">
             </div>
-            <div class="tab-pane container-fluid justify-content-start my-auto fade" id="camera">
+            <div class="tab-pane container-fluid justify-content-start fade" id="camera">
+                <div class="row" style="height: 100%;">
+                    <div class="col-md-1 camera-tab-menu" style="background-color: #333333;">
+                        <div class="list-group">
+                          <a href="#" class="list-group-item active text-center">
+                            <h4 class="fas fa-film"></h4><br/>All List
+                          </a>
+                          <a href="#" class="list-group-item text-center">
+                            <h4 class="fas fa-video"></h4><br/>Add Camera
+                          </a>
+                        </div>
+                    </div>
+                    <div class="col-md-11 camera-tab">
+                        <div class="container register camera-tab-content active">
+                        </div>
+                        <div class="container-fluid register camera-tab-content">
+                            <div class="row">
+                                <div class="col-sm-2 register-left">
+                                    <img src="../images/camera_large.png" alt=""/>
+                                    <h3>Welcome</h3>
+                                    <p>Please Add Camera</p>
+                                </div>
+                                <div class="col-md-10 register-right">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="addcamera" role="tabpanel" aria-labelledby="addcamera-tab">
+                                            <h3  class="register-heading">Add Camera Details</h3>
+                                            <div class="row register-form was-validated">
+                                                <div class="col-md-7">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Home Address:</label>
+                                                        <select class="form-control" id="select-camera-addresses" required>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Camera URL:</label>
+                                                        <input type="text" class="form-control" id="txt-camera-url" placeholder="URL (ex. https://username:password@192.168.1.101 or rtsp://...) *" value="" required/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Display Name:</label>
+                                                        <input type="text" class="form-control" id="txt-camera-dispname" placeholder="Display Name (ex. Cam-1, Cam-2, ...) *" value="" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="textinput">Camera Location:</label>
+                                                        <input type="text" class="form-control" id="txt-camera-location" placeholder="Camera Location *" value=""/>
+                                                    </div>
+                                                    <input type="submit" class="btnRegister"  value="Register" id="btn-camera-register"/>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div style="background: black; height: 80%; width: 100%;"></div>
+                                                    <input type="button" class="btnRegister"  value="Test Connection" id="btn-camera-testconn"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane container-fluid justify-content-start fade" id="user">
                 <div class="row" style="height: 100%;">
@@ -87,7 +154,7 @@
                           </a>
                         </div>
                     </div>
-                    <div class="col-sm-11 bhoechie-tab">
+                    <div class="col-md-11 bhoechie-tab">
                         <div class="container register bhoechie-tab-content active">
                         </div>
                         <div class="container register bhoechie-tab-content ">
@@ -98,7 +165,7 @@
                                     <p>Please register Home adress and users, members of familes</p>
                                 </div>
                                 <div class="col-md-9 register-right">
-                                    <div class="tab-content" id="myTabContent">
+                                    <div class="tab-content">
                                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                             <h3 class="register-heading">Apply Home Adress</h3>
                                             <div class="row register-form">
@@ -156,7 +223,7 @@
                                     <p>Please register Home adress and users, members of familes</p>
                                 </div>
                                 <div class="col-md-9 register-right">
-                                    <div class="tab-content" id="myTabContent">
+                                    <div class="tab-content">
                                         <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                             <h3  class="register-heading">Register User Details</h3>
                                             <div class="row register-form was-validated">
@@ -164,7 +231,6 @@
                                                     <label class="control-label" for="textinput">Home Address:</label>
                                                     <div class="form-group">
                                                         <select class="form-control" id="select-user-addresses" required>
-                                                            <option class="hidden"  selected disabled>Please select User's Home Address</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -183,7 +249,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label" for="textinput">Phone Number:</label>
-                                                        <input type="text" maxlength="10" minlength="10" id="txt-user-phonenumber" class="form-control" placeholder="Phone *" value="" required/>
+                                                        <input type="text" id="txt-user-phonenumber" class="form-control" placeholder="Phone *" value="" required/>
                                                     </div>
                                                     
                                                 </div>

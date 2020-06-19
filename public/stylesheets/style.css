@@ -193,8 +193,8 @@ div.bhoechie-tab-menu div.list-group>a.active,
 div.bhoechie-tab-menu div.list-group>a.active .glyphicon,
 div.bhoechie-tab-menu div.list-group>a.active .fa{
   background-color: #00c6ff;
-  background-image: f8f9fa;
-  color: f8f9fa;
+  background-image: #f8f9fa;
+  color: #f8f9fa;
 }
 div.bhoechie-tab-menu div.list-group>a.active:after{
   content: '';
@@ -215,5 +215,69 @@ div.bhoechie-tab-content{
 }
 
 div.bhoechie-tab div.bhoechie-tab-content:not(.active){
+  display: none;
+}
+
+
+
+div.camera-tab {
+  margin: auto;
+}
+div.camera-tab-menu{
+  padding-right: 0;
+  padding-left: 0;
+  padding-bottom: 0;
+}
+div.camera-tab-menu div.list-group{
+  margin-bottom: 0;
+}
+
+div.camera-tab-menu div.list-group-item {
+  background-color: #333333;
+}
+
+div.camera-tab-menu div.list-group>a{
+  margin-bottom: 0;
+  background-color: #333333;
+  color: #f8f9fa;
+}
+div.camera-tab-menu div.list-group>a .glyphicon,
+div.camera-tab-menu div.list-group>a .fa {
+  color: #f8f9fa;
+}
+div.camera-tab-menu div.list-group>a:first-child{
+  border-top-right-radius: 0;
+  -moz-border-top-right-radius: 0;
+}
+div.camera-tab-menu div.list-group>a:last-child{
+  border-bottom-right-radius: 0;
+  -moz-border-bottom-right-radius: 0;
+}
+div.camera-tab-menu div.list-group>a.active,
+div.camera-tab-menu div.list-group>a.active .glyphicon,
+div.camera-tab-menu div.list-group>a.active .fa{
+  background-color: #00c6ff;
+  background-image: #f8f9fa;
+  color: #f8f9fa;
+}
+div.camera-tab-menu div.list-group>a.active:after{
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-top: -13px;
+  border-left: 0;
+  border-bottom: 13px solid transparent;
+  border-top: 13px solid transparent;
+  border-left: 10px solid #00c6ff;
+}
+
+div.camera-tab-content{
+  background-color: #f8f9fa;
+  /* border: 1px solid #eeeeee; */
+  padding-left: 20px;
+}
+
+div.camera-tab div.camera-tab-content:not(.active){
   display: none;
 }
