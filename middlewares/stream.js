@@ -77,7 +77,7 @@ module.exports.getStreamServer = function(socketServer, token, port)
 
 module.exports.createStream = function(uri, token, port)
 {   
-    const filePath = "ffmpeg"; // for Linux
+    var filePath = "ffmpeg"; // for Linux
     
     if (process.platform === "win32")
     {

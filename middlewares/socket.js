@@ -284,13 +284,13 @@ module.exports.getSocketConnection = function(server, mysqlCon)
 
             var ffmpeg = stream.createStream(data.uri, data.token, stream_port);
 
-            global.activeStreams[data.token] = JSON.stringify({
+            global.activeStreams[data.token] = {
                 socketServer: socServer,
                 streamServer: streamServer,
                 websocketPort: websocket_port,
                 streamPort: stream_port,
                 streamFFmpeg: ffmpeg
-            });
+            };
 
             socket.emit("start-streaming", {
                 port: websocket_port
@@ -304,7 +304,7 @@ module.exports.getSocketConnection = function(server, mysqlCon)
                 return;
             }
             
-            var info = JSON.parse(global.activeStreams[token]);
+            var info = global.activeStreams[token];
             try
             {
                 info.streamServer.close();
