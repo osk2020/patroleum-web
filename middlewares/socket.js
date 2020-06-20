@@ -309,7 +309,10 @@ module.exports.getSocketConnection = function(server, mysqlCon)
             {
                 stream.killStream(info.streamFFmpeg);
             }
-            catch {}
+            catch(e)
+            {
+                console.log(e);
+            }
 
             common.removePort(info.websocketPort);
             common.removePort(info.streamPort);
