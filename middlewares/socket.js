@@ -307,6 +307,9 @@ module.exports.getSocketConnection = function(server, mysqlCon)
             var info = JSON.parse(global.activeStreams[token]);
             try
             {
+                info.streamServer.close();
+                info.socketServer.close();
+
                 stream.killStream(info.streamFFmpeg);
             }
             catch(e)
