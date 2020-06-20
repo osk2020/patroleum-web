@@ -107,6 +107,7 @@ module.exports.createStream = function(uri, token, port)
 
 module.exports.killStream = function(stream)
 {
+    console.log("killStream ", stream);
     if (process.platform === "win32")
     {
         spawn('taskkill', ["/pid", stream.pid, "/f", "/t"]);
