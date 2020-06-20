@@ -76,9 +76,15 @@ module.exports.getStreamServer = function(socketServer, token, port)
 }
 
 module.exports.createStream = function(uri, token, port)
-{    
-    //const filePath = require.resolve("../bin/ffmpeg.exe"); // for Windows
+{   
     const filePath = "ffmpeg"; // for Linux
+    
+    if (process.platform === "win32")
+    {
+        filePath = require.resolve("../bin/ffmpeg.exe"); // for Windows
+    }
+    
+    
     console.log(filePath);
     const ffmpeg = spawn(filePath, ['-re -i ' + uri, '-maxrate 20M -bufsize 10M -f mpegts', '-codec:v mpeg1video', '-r 25 -b:v 1000k', '-bf 0', 'http://127.0.0.1:' + port + '/' + token], { shell:true });
     //const ffmpeg = spawn(filePath, ['-re -i https://www.radiantmediaplayer.com/media/bbb-360p.mp4', '-maxrate 20M -bufsize 10M -f mpegts', '-codec:v mpeg1video', '-r 25 -b:v 1000k', '-bf 0', 'http://127.0.0.1:' + port + '/' + token], { shell:true });
@@ -101,5 +107,12 @@ module.exports.createStream = function(uri, token, port)
 
 module.exports.killStream = function(stream)
 {
-    spawn('taskkill', ["/pid", stream.pid, "/f", "/t"]);
+    if (process.platform === "win32")
+    {
+        spawn('taskkill', ["/pid", stream.pid, "/f", "/t"]);
+    }
+    else
+    {
+        stream.kill('SIGINT');
+    }
 }
