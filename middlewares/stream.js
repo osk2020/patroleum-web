@@ -114,6 +114,6 @@ module.exports.killStream = function(stream)
     }
     else
     {
-        stream.kill('SIGINT');
+        process.kill(stream);
     }
 }
