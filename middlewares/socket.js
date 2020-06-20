@@ -1,5 +1,6 @@
 const socketIO = require('socket.io');
 const common = require("../middlewares/common");
+const stream = require('../middlewares/stream');
 
 module.exports.getSocketConnection = function(server, mysqlCon)
 {
@@ -266,6 +267,55 @@ module.exports.getSocketConnection = function(server, mysqlCon)
                 });
             });
         });
+
+        socket.on('test-connection', (data) =>
+        {
+            if (!common.validateToken(data.token))
+            {
+                return;
+            }
+            console.log('test-connection ', data.uri);
+
+            var websocket_port = common.getAvailablePort();
+            var socServer = stream.getSocketServer(websocket_port);
+
+            var stream_port = common.getAvailablePort();
+            var streamServer = stream.getStreamServer(socServer, data.token, stream_port);
+
+            var ffmpeg = stream.createStream(data.uri, data.token, stream_port);
+
+            global.activeStreams[data.token] = JSON.stringify({
+                socketServer: socServer,
+                streamServer: streamServer,
+                websocketPort: websocket_port,
+                streamPort: stream_port,
+                streamFFmpeg: ffmpeg
+            });
+
+            socket.emit("start-streaming", {
+                port: websocket_port
+            })
+        });
+
+        socket.on('test-disconnection', ({token}) =>
+        {
+            if (!common.validateToken(token))
+            {
+                return;
+            }
+            
+            var info = JSON.parse(global.activeStreams[token]);
+            try
+            {
+                stream.killStream(info.streamFFmpeg);
+            }
+            catch {}
+
+            common.removePort(info.websocketPort);
+            common.removePort(info.streamPort);
+
+            delete global.activeStreams[token];
+        })
     });
 
     return io;

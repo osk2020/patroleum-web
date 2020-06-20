@@ -17,6 +17,7 @@
     <script src="../javascripts/camera.js"></script>
     <script src="../javascripts/house.js"></script>
     <script src="../javascripts/user.js"></script>
+    <script src="../javascripts/jsmpeg.min.js"></script>
     <script>
         $(document).ready(function() {
             $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
@@ -127,7 +128,7 @@
                                                     <input type="submit" class="btnRegister"  value="Register" id="btn-camera-register"/>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <div style="background: black; height: 80%; width: 100%;"></div>
+                                                    <div style="background: black; height: 80%; width: 100%;"><canvas id="video-canvas" style="height:100%; width:inherit;"></canvas></div>
                                                     <input type="button" class="btnRegister"  value="Test Connection" id="btn-camera-testconn"/>
                                                 </div>
                                             </div>

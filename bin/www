@@ -25,6 +25,8 @@ app.set('port', httpport);
 
 global.activeSockets = [];
 global.activeUsers = new Object();
+global.activeStreams = new Object();
+global.activePorts = [];
 
 /**
  * Create HTTP server.

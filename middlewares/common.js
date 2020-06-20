@@ -1,5 +1,7 @@
 var hash = require('crypto');
 
+const BASE_PORT = 11210;
+
 module.exports.updateToken = function(token)
 {
     if (global.activeUsers[token] !== null)
@@ -10,8 +12,7 @@ module.exports.updateToken = function(token)
 
 module.exports.validateToken = function(token)
 {
-    console.log(token);
-    console.log(global.activeUsers);
+    console.log("validateToken ", global.activeUsers);
     if (global.activeUsers[token] == null)
     {
         return false;
@@ -20,6 +21,27 @@ module.exports.validateToken = function(token)
     this.updateToken(token);
 
     return true;
+}
+
+module.exports.getAvailablePort = function()
+{
+    for (var i = 0; i < 1000; i++)
+    {
+        var ports = global.activePorts.filter(p => p == (BASE_PORT + i));
+        console.log("getAvailablePort ", ports);
+        if (ports.length == 0)
+        {
+            global.activePorts.push(BASE_PORT + i);
+            return BASE_PORT + i;
+        }
+    }
+
+    return 0;
+}
+
+module.exports.removePort = function(port)
+{
+    global.activePorts = global.activePorts.filter(p => p !== port);
 }
 
 module.exports.getHashString = function(data)
